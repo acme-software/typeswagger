@@ -1,7 +1,7 @@
 package ch.acmesoftware.typeswagger.v3
 
 import cats.data.Validated._
-import cats.data.{NonEmptyList => NEL, _}
+import cats.data._
 import cats.implicits._
 
 sealed trait Validator {

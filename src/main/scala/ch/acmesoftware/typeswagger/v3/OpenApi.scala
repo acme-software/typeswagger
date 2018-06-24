@@ -2,8 +2,6 @@ package ch.acmesoftware.typeswagger.v3
 
 import ch.acmesoftware.typeswagger.v3.OpenApi._
 
-import scala.language.implicitConversions
-
 case class OpenApi(openapi: String = "3.0.0", info: Info, servers: Seq[Server] = Nil, tags: Seq[Tag] = Nil, paths: Seq[Path] = Nil) {
 
   def withInfo(license: Option[String] = None, licenseUrl: Option[String] = None,
@@ -15,12 +13,6 @@ case class OpenApi(openapi: String = "3.0.0", info: Info, servers: Seq[Server] =
 
   def withTag(name: String, description: Option[String] = None, externalDocs: Option[ExternalDoc] = None): OpenApi =
     copy(tags = tags :+ Tag(name, description, externalDocs))
-
-  @deprecated
-  def withPath(path: String, summary: Option[String] = None, description: Option[String] = None, servers: Seq[Server] = Nil, parameters: Seq[Parameter] = Nil)
-              (op1: HttpOperation, opn: HttpOperation*): OpenApi = {
-    copy(paths = paths :+ Path(path, summary, description, servers, parameters, (Seq(op1) ++ opn).toMap))
-  }
 
   def path(path: String, summary: Option[String] = None, description: Option[String] = None, servers: Seq[Server] = Nil, parameters: Seq[Parameter] = Nil)
           (ops: Seq[HttpOperation]): OpenApi =
@@ -98,11 +90,14 @@ object OpenApi {
     override def str(): String = "cookie"
   }
 
-  object Schema {
-    val string = Schema("string")
+  case class Schema(schemaType: String, format: Option[String])
 
-    val int = Schema("integer")
+  object Schema {
+    def string = Schema("string", None)
+
+    def int = Schema("integer", Some("int32"))
   }
+
 }
 
 case class Info(title: String, description: Option[String] = None, termsOfService: Option[String] = None, contact: Option[Contact] = None, license: Option[License] = None, version: String)
@@ -138,12 +133,12 @@ case class Operation(summary: Option[String], description: Option[String], opera
 case class Parameter(name: String, in: ParameterLocation, schema: Schema, description: Option[String], required: Boolean,
                      deprecated: Boolean, allowEmptyValue: Boolean)
 
-case class RequestBody()
+case class RequestBody(content: Seq[MediaType], description: Option[String], required: Boolean)
 
 case class Response(description: String)
-
-case class Schema(schemaType: String) //TODO: complete
 
 case class Callback()
 
 case class SecurityRequirement()
+
+case class MediaType(mimeType: String, schema: Schema, example: Option[String])

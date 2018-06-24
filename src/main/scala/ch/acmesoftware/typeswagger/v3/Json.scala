@@ -51,9 +51,9 @@ object Json {
     ("parameters" -> nonEmpty(operation.parameters)) ~
     ("requestBody" -> operation.requestBody) ~
     ("responses" -> nonEmpty(operation.responses.map(r => r._1.str() -> r._2))) ~
-    ("callbacks" -> nonEmpty(operation.callbacks)) ~
+    //("callbacks" -> nonEmpty(operation.callbacks)) ~
     ("deprecated" -> operation.deprecated) ~
-    ("security" -> nonEmpty(operation.security)) ~
+    //("security" -> nonEmpty(operation.security)) ~
     ("servers" -> nonEmpty(operation.servers))
 
   implicit def convert(tag: Tag): JsonAST.JObject = ("name" -> tag.name) ~
@@ -73,13 +73,18 @@ object Json {
   implicit def convert(externalDoc: ExternalDoc): JsonAST.JObject = ("url" -> externalDoc.url) ~
     ("description" -> externalDoc.description)
 
-  implicit def convert(requestBody: RequestBody): JsonAST.JObject = ("toto" -> true)
+  implicit def convert(requestBody: RequestBody): JsonAST.JObject = ("content" -> requestBody.content.map(c => c.mimeType -> c).toMap) ~
+    ("description" -> requestBody.description) ~
+    ("required" -> requestBody.required)
+
+  implicit def convert(mediaType: MediaType): JsonAST.JObject = ("schema" -> mediaType.schema) ~
+    ("example" -> mediaType.example)
 
   implicit def convert(response: Response): JsonAST.JObject = ("description" -> response.description)
 
-  implicit def convert(callback: Callback): JsonAST.JObject = ("toto" -> true)
+  //TODO implicit def convert(callback: Callback): JsonAST.JObject = ("toto" -> true)
 
-  implicit def convert(securityRequirement: SecurityRequirement): JsonAST.JObject = ("toto" -> true)
+  //TODO implicit def convert(securityRequirement: SecurityRequirement): JsonAST.JObject = ("toto" -> true)
 
   def nonEmpty[A](in: Seq[A]): Option[Seq[A]] = if (in.isEmpty) None else Some(in)
 
