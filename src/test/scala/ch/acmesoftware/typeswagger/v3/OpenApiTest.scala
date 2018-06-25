@@ -63,25 +63,37 @@ class OpenApiTest extends FlatSpec with Matchers {
   }
 
   it should "print json for a complex example" in {
-    val json = OpenApi.create("ApiDoc", "1.0.0", description = "An API Documentation built with TypeSwagger", termsOfService = "/tos").
-      withInfo(license = "MIT", licenseUrl = "https://opensource.org/licenses/MIT").
-      withTag("testtag", "A tag description", externalDocs = doc("http://link.to.doc")).
-      path("/user/{id}", summary = "Path summary") {
+    val res = parse(OpenApi.create("ApiDoc", "1.0.0").
+      path("/user/{id}", summary = "Path summary", description = "A longer description of this path") {
         (GET >> op("A summary", "GET operation for this route").
           withParameter("id", PATH, Schema.int, description = "The id...", required = true).
-          withParameter("comment", QUERY, Schema.string, description = "Some deprecated comment", deprecated = true).
+          withParameter("comment", QUERY, Schema.string, description = "Some deprecated comment", deprecated = true, allowEmptyValue = false).
           withTag("testtag")) ~
         (DELETE >> op("Delete operation").
           withParameter("id", PATH, Schema.int, description = "The id...", required = true))
       }.
-      withServer("http://localhost:9000/api", Some("Local Dev Server")).
-      withServer("https://production.tld/api", Some("Production Server")).
-      toJson()
-
-    println(json)
-
-    val res = parse(json)
+      toJson())
 
     (res \ "paths" \ "/user/{id}" \ "summary").extract[String] shouldEqual "Path summary"
+    (res \ "paths" \ "/user/{id}" \ "description").extract[String] shouldEqual "A longer description of this path"
+
+    (res \ "paths" \ "/user/{id}" \ "get" \ "tags")(0).extract[String] shouldEqual "testtag"
+    (res \ "paths" \ "/user/{id}" \ "get" \ "description").extract[String] shouldEqual "GET operation for this route"
+    (res \ "paths" \ "/user/{id}" \ "get" \ "summary").extract[String] shouldEqual "A summary"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(0) \ "name").extract[String] shouldEqual "id"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(0) \ "in").extract[String] shouldEqual "path"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(0) \ "schema" \ "type").extract[String] shouldEqual "integer"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(0) \ "schema" \ "format").extract[String] shouldEqual "int32"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(0) \ "description").extract[String] shouldEqual "The id..."
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(0) \ "required").extract[Boolean] shouldEqual true
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(0) \ "deprecated").extract[Boolean] shouldEqual false
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(0) \ "allowEmptyValue").extract[Boolean] shouldEqual true
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(1) \ "name").extract[String] shouldEqual "comment"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(1) \ "in").extract[String] shouldEqual "query"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(1) \ "schema" \ "type").extract[String] shouldEqual "string"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(1) \ "description").extract[String] shouldEqual "Some deprecated comment"
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(1) \ "required").extract[Boolean] shouldEqual false
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(1) \ "deprecated").extract[Boolean] shouldEqual true
+    ((res \ "paths" \ "/user/{id}" \ "get" \ "parameters")(1) \ "allowEmptyValue").extract[Boolean] shouldEqual false
   }
 }

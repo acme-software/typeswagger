@@ -1,7 +1,7 @@
 TypeSwagger - A Swagger / OpenApi Spec DSL for Scala
 ====================================================
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/acme-software/typeswagger.svg?branch=master)](https://travis-ci.org/acme-software/typeswagger)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/acme-software/typeswagger.svg?branch=master)](https://travis-ci.org/acme-software/typeswagger) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1a2d0c493bd9416996a8436871a17b01)](https://www.codacy.com/app/frne/typeswagger?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=acme-software/typeswagger&amp;utm_campaign=Badge_Grade)
 
 **TypeSwagger provides a typesafe Scala DSL to build OpenApi (Swagger) Specifications. It can be used within any Scala 
 project to generate HTTP API documentations**
