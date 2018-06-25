@@ -1,0 +1,21 @@
+This is the documentation for the typeswagger scala library.
+
+== Package structure ==
+
+The [[ch.acmesoftware.typeswagger]] package contains subpackages for each (supported) OpenApi spec version. The current
+supported version is [[ch.acmesoftware.typeswagger.v3]]
+
+=== OpenApi Version Packages ===
+
+Each version package (e.g. [[ch.acmesoftware.typeswagger.v3]]), contains of the following objects:
+
+  - [[ch.acmesoftware.typeswagger.v3.OpenApi]] The main starting point to create & generate a v3 API specification
+  - [[ch.acmesoftware.typeswagger.v3.Implicits]] An implicits object to import implicit helpers and DSL convenience methods
+  - [[ch.acmesoftware.typeswagger.v3.Validator]] Helper to validate an existing spec before serialization (optional)
+  - [[ch.acmesoftware.typeswagger.v3.Json]] A JSON serializer for built API specs
+
+=== Domain Model ===
+
+The domain model osed for Specs is located in the same file as the [[ch.acmesoftware.typeswagger.v3.OpenApi]] main class.
+Where possible, the domain objects are named and structured as close as possible to the API specification JSON model.
+Links to the specs are provided in class headers.

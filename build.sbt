@@ -20,6 +20,10 @@ scalacOptions ++= Seq(
   "-Ypartial-unification"
 )
 
+scalacOptions in (Compile, doc) ++= Seq(
+  "-doc-root-content", baseDirectory.value+"/src/main/scaladoc/rootdoc.txt"
+)
+
 libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-native" % "3.5.4",
   "org.typelevel" %% "cats-core" % "1.0.1",

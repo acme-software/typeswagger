@@ -4,7 +4,7 @@ import ch.acmesoftware.typeswagger.v3.OpenApi._
 
 /** Main builder object for OpenAPI v3 specifications
   *
-  * @see OpenApi.create
+  * @see Companion object functions like [[OpenApi.create]]
   */
 case class OpenApi(openapi: String = "3.0.0", info: Info, servers: Seq[Server] = Nil, tags: Seq[Tag] = Nil, paths: Seq[Path] = Nil) {
 
