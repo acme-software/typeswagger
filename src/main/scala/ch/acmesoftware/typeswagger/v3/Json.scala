@@ -68,7 +68,8 @@ object Json {
     ("deprecated" -> parameter.deprecated) ~
     ("allowEmptyValue" -> parameter.allowEmptyValue)
 
-  implicit def convert(schema: Schema): JsonAST.JObject = ("type" -> schema.schemaType) //TODO: complete
+  implicit def convert(schema: Schema): JsonAST.JObject = ("type" -> schema.schemaType) ~
+    ("format" -> schema.format)//TODO: complete
 
   implicit def convert(externalDoc: ExternalDoc): JsonAST.JObject = ("url" -> externalDoc.url) ~
     ("description" -> externalDoc.description)
